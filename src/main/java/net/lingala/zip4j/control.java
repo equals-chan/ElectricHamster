@@ -8,6 +8,7 @@ import net.lingala.zip4j.model.enums.EncryptionMethod;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +34,9 @@ public class control {
         return RandomPwd.getRandomPwd(n);
     }
 
-    public static void main(String[] args) throws IOException, WriteException {
+    public static void main(String[] args) throws IOException, WriteException, SQLException {
         //最上级目录
-        File topFolder = new File("D:\\Codes\\zip4j\\resources\\test1");
+        File topFolder = new File("D:\\Codes\\ElectricHamster\\resources\\test1");
         //压缩文件存放处
         String ZippedFilePath = "./";
         //密码表存放处
@@ -46,6 +47,8 @@ public class control {
 
         excelWriter excelWriter = new excelWriter("\\passwords.xls",excelPath);
         ArrayList<ArrayList> temp = new ArrayList();
+
+        sqliteConnecter sqliter = new sqliteConnecter();
 
         File[] filesAndFolders = topFolder.listFiles();
 
@@ -61,12 +64,14 @@ public class control {
                 String pwd = getPwd(10); //有风险，不过自用程序，无所谓了
                 OneRow.add(pwd);
                 temp.add(OneRow);
-                zip(fs,ZippedFilePath+"\\"+FromName+".zip",pwd.toCharArray());
+                sqliter.insert((int)OneRow.get(0),OneRow.get(1).toString(),OneRow.get(2).toString());
                 excelWriter.AddRow(OneRow.get(0).toString(),OneRow.get(1).toString(),OneRow.get(2).toString());
+                zip(fs,ZippedFilePath+"\\"+FromName+".zip",pwd.toCharArray());
                 FromName++;
             }
 
         }
+        sqliter.close();
         excelWriter.close();
 
     }
