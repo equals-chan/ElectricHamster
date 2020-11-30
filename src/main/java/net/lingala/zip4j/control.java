@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class control {
 
@@ -34,46 +33,92 @@ public class control {
         return RandomPwd.getRandomPwd(n);
     }
 
+
     public static void main(String[] args) throws IOException, WriteException, SQLException {
         //最上级目录
         File topFolder = new File("D:\\Codes\\ElectricHamster\\resources\\test1");
         //压缩文件存放处
-        String ZippedFilePath = "./";
+        String ZippedFilePath = "D:\\Codes\\ElectricHamster\\resources\\zipped";
         //密码表存放处
         String excelPath = "./";
-        //文件名开始处
-        int FromName = 10001;
 
-
+        //计数器
+        counter counter = new counter();
+        //写excle
         excelWriter excelWriter = new excelWriter("\\passwords.xls",excelPath);
+
         ArrayList<ArrayList> temp = new ArrayList();
 
         sqliteConnecter sqliter = new sqliteConnecter();
 
         File[] filesAndFolders = topFolder.listFiles();
 
-
+        double load = 0;
         for (File fs : filesAndFolders){
-            if (fs.isFile()){
+            if (fs.isFile()){ //不压缩文件 只压文件夹
+                System.out.printf("进度：%.2f%%\n",(load/filesAndFolders.length)*100);
+                load++;
+                counter.addThisTimeJumppedNum();
                 continue;
-            }else {
+
+            } else {
+                //根据分隔符分割路径，集合的最后一项即为文件夹名
                 String[] s1 = fs.toString().split("\\\\"); //转义符杀我...
-                ArrayList OneRow = new ArrayList(3);
-                OneRow.add(FromName);
-                OneRow.add(s1[s1.length-1]);
-                String pwd = getPwd(10); //有风险，不过自用程序，无所谓了
-                OneRow.add(pwd);
-                temp.add(OneRow);
-                sqliter.insert((int)OneRow.get(0),OneRow.get(1).toString(),OneRow.get(2).toString());
-                excelWriter.AddRow(OneRow.get(0).toString(),OneRow.get(1).toString(),OneRow.get(2).toString());
-                zip(fs,ZippedFilePath+"\\"+FromName+".zip",pwd.toCharArray());
-                FromName++;
+
+                // 如果该文件夹被压缩过
+                String name;
+                if (sqliter.isZipped((name = s1[s1.length-1]))){
+                    System.out.printf("文件夹 %s 已经被压缩过！\n",name);
+                    //改进度条
+                    load++;
+                    counter.addThisTimeJumppedNum();
+                    continue;
+                }else {
+                    //获取开始时的文件名
+                    int FromName = sqliter.getfilesLastNO()+1;
+
+                    ArrayList OneRow = new ArrayList(4);
+                    OneRow.add(FromName);
+                    //取文件夹名
+                    OneRow.add(s1[s1.length-1]);
+
+                    String pwd = getPwd(10); //有风险，不过自用程序，无所谓了
+
+                    OneRow.add(pwd);
+                    OneRow.add(times.getNowTimes());
+                    //这个暂时没什么用，不过先留着
+                    temp.add(OneRow);
+
+                    //文件信息写入
+                    sqliter.insert((int)OneRow.get(0),OneRow.get(1).toString(),OneRow.get(2).toString(),OneRow.get(3).toString());
+                    //写入excle
+                    excelWriter.AddRow(OneRow.get(0).toString(),OneRow.get(1).toString(),OneRow.get(2).toString(),OneRow.get(3).toString());
+
+                    //输出进度
+                    System.out.printf("进度：%.2f%%\n",(load/filesAndFolders.length)*100);
+
+                    load++;
+
+                    System.out.println("id : "+OneRow.get(0).toString());
+                    System.out.println("正在压缩： "+OneRow.get(1).toString()+"\n");
+
+                    //开始压缩
+                    zip(fs,ZippedFilePath+"\\"+FromName+".zip",pwd.toCharArray());
+
+                    //文件名+1
+                    FromName++;
+                    //数据库的文件名+1
+                    sqliter.addfilesLastNO();
+                    counter.addThisTimeZippedNum();
+                }
+
             }
 
         }
         sqliter.close();
         excelWriter.close();
-
+        System.out.println("程序结束！");
+        counter.printSelf();
     }
 
 }

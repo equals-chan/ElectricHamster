@@ -39,6 +39,7 @@ public class excelWriter{
         sheet.addCell(new Label(0,0,"Zip_ID"));
         sheet.addCell(new Label(1,0,"Folder_Name"));
         sheet.addCell(new Label(2,0,"PassWord"));
+        sheet.addCell(new Label(3,0,"create_Time"));
         pointer++;
 
     }
