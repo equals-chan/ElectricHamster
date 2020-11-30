@@ -30,8 +30,10 @@ public class sqliteConnecter {
         this.conn = DriverManager.getConnection("jdbc:sqlite:" + db);
         this.state = conn.createStatement();
         //如果文件不存在，就初始化 上面连接时会自动生成文件
-        if (!isex)
+        if (!isex){
+            System.out.println("未检测到数据库，开始创建");
             init();
+        }
 
     }
 

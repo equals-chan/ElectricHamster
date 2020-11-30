@@ -36,28 +36,30 @@ public class control {
 
     public static void main(String[] args) throws IOException, WriteException, SQLException {
         //最上级目录
-        File topFolder = new File("D:\\Codes\\ElectricHamster\\resources\\test1");
+        File topFolder = new File("D:\\game\\someGames\\game\\share");
         //压缩文件存放处
-        String ZippedFilePath = "D:\\Codes\\ElectricHamster\\resources\\zipped";
+        String ZippedFilePath = "D:\\game\\someGames\\game\\zipped";
         //密码表存放处
         String excelPath = "./";
 
         //计数器
         counter counter = new counter();
+        //
+        progressBar progressBar = new progressBar();
         //写excle
-        excelWriter excelWriter = new excelWriter("\\passwords.xls",excelPath);
+        excelWriter excelWriter = new excelWriter("\\pass.xls",excelPath);
 
         ArrayList<ArrayList> temp = new ArrayList();
 
         sqliteConnecter sqliter = new sqliteConnecter();
 
         File[] filesAndFolders = topFolder.listFiles();
+        progressBar.setAllFolderNum(filesAndFolders.length);
 
-        double load = 0;
         for (File fs : filesAndFolders){
             if (fs.isFile()){ //不压缩文件 只压文件夹
-                System.out.printf("进度：%.2f%%\n",(load/filesAndFolders.length)*100);
-                load++;
+                progressBar.printBar();
+                progressBar.addnowNum();
                 counter.addThisTimeJumppedNum();
                 continue;
 
@@ -68,9 +70,9 @@ public class control {
                 // 如果该文件夹被压缩过
                 String name;
                 if (sqliter.isZipped((name = s1[s1.length-1]))){
-                    System.out.printf("文件夹 %s 已经被压缩过！\n",name);
+                    progressBar.printBar();
                     //改进度条
-                    load++;
+                    progressBar.addnowNum();
                     counter.addThisTimeJumppedNum();
                     continue;
                 }else {
@@ -95,9 +97,8 @@ public class control {
                     excelWriter.AddRow(OneRow.get(0).toString(),OneRow.get(1).toString(),OneRow.get(2).toString(),OneRow.get(3).toString());
 
                     //输出进度
-                    System.out.printf("进度：%.2f%%\n",(load/filesAndFolders.length)*100);
-
-                    load++;
+                    progressBar.printBar();
+                    progressBar.addnowNum();
 
                     System.out.println("id : "+OneRow.get(0).toString());
                     System.out.println("正在压缩： "+OneRow.get(1).toString()+"\n");
