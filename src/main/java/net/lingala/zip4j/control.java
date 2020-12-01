@@ -5,6 +5,7 @@ import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.model.enums.AesKeyStrength;
 import net.lingala.zip4j.model.enums.EncryptionMethod;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,27 +36,38 @@ public class control {
 
 
     public static void main(String[] args) throws IOException, WriteException, SQLException {
-        //最上级目录
-        File topFolder = new File("D:\\game\\someGames\\game\\share");
+        AnsiConsole.systemInstall();
+        properties properties = new properties("./");
+        clock clock = new clock();
+
+
+        //待压缩文件夹最上级目录
+        File topFolder = new File(properties.getFolderPath());
         //压缩文件存放处
-        String ZippedFilePath = "D:\\game\\someGames\\game\\zipped";
+        String ZippedFilePath = properties.getZippedFilesPath();
         //密码表存放处
-        String excelPath = "./";
+        String excelPath = properties.getExcelPath();
+        //写excle
+        excelWriter excelWriter = new excelWriter("\\passwords.xls",excelPath,properties.getSqlPath());
+
+        int excelOpNum = Integer.parseInt(properties.getExcelOpNum());
+        //sql
+        sqliteConnecter sqliter = new sqliteConnecter(properties.getSqlPath()+"db.sqlite3");
+
 
         //计数器
         counter counter = new counter();
-        //
+        //bar
         progressBar progressBar = new progressBar();
-        //写excle
-        excelWriter excelWriter = new excelWriter("\\pass.xls",excelPath);
+
 
         ArrayList<ArrayList> temp = new ArrayList();
 
-        sqliteConnecter sqliter = new sqliteConnecter();
+
 
         File[] filesAndFolders = topFolder.listFiles();
         progressBar.setAllFolderNum(filesAndFolders.length);
-
+        clock.startClock();
         for (File fs : filesAndFolders){
             if (fs.isFile()){ //不压缩文件 只压文件夹
                 progressBar.printBar();
@@ -74,6 +86,7 @@ public class control {
                     //改进度条
                     progressBar.addnowNum();
                     counter.addThisTimeJumppedNum();
+                    System.out.println("\u001b[1;47m 文件夹已被压缩过："+name+"\u001b[0m \n");
                     continue;
                 }else {
                     //获取开始时的文件名
@@ -94,14 +107,16 @@ public class control {
                     //文件信息写入
                     sqliter.insert((int)OneRow.get(0),OneRow.get(1).toString(),OneRow.get(2).toString(),OneRow.get(3).toString());
                     //写入excle
-                    excelWriter.AddRow(OneRow.get(0).toString(),OneRow.get(1).toString(),OneRow.get(2).toString(),OneRow.get(3).toString());
+                    if (excelOpNum == 1) {
+                        excelWriter.AddRow(OneRow.get(0).toString(), OneRow.get(1).toString(), OneRow.get(2).toString(), OneRow.get(3).toString());
+                    }
 
                     //输出进度
                     progressBar.printBar();
                     progressBar.addnowNum();
 
-                    System.out.println("id : "+OneRow.get(0).toString());
-                    System.out.println("正在压缩： "+OneRow.get(1).toString()+"\n");
+                    System.out.println("\u001b[1;46m id : "+OneRow.get(0).toString()+"\u001b[0m");
+                    System.out.println("\u001b[1;46m 正在压缩： "+OneRow.get(1).toString()+"\u001b[0m \n");
 
                     //开始压缩
                     zip(fs,ZippedFilePath+"\\"+FromName+".zip",pwd.toCharArray());
@@ -117,9 +132,18 @@ public class control {
 
         }
         sqliter.close();
+        //等sqliter结束再调用写入
+        if (excelOpNum == 0){
+            excelWriter.printAllData();
+        }
+        excelWriter.push();
         excelWriter.close();
-        System.out.println("程序结束！");
+
+        System.out.println("\u001b[1;45m 程序结束 \u001b[0m");
         counter.printSelf();
+        clock.endClock();
+        clock.print();
+        AnsiConsole.systemUninstall();
     }
 
 }

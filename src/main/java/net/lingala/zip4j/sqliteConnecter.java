@@ -21,8 +21,11 @@ public class sqliteConnecter {
     //查询是否已经压缩过了
     private String isZippedSQL = "select id from t_pwd where FolderName=?";
 
-    sqliteConnecter() throws SQLException {
-        String db = "db.sqlite3";
+    //导出所有条目
+    private String selectAll = "select * from t_pwd";
+
+    sqliteConnecter(String dbPath) throws SQLException {
+        String db = dbPath;
 
         File file = new File(db);
         boolean isex = file.exists();
@@ -31,7 +34,7 @@ public class sqliteConnecter {
         this.state = conn.createStatement();
         //如果文件不存在，就初始化 上面连接时会自动生成文件
         if (!isex){
-            System.out.println("未检测到数据库，开始创建");
+            System.out.println("\u001b[1;42m 未检测到数据库，开始创建\u001b[0m");
             init();
         }
 
@@ -90,6 +93,12 @@ public class sqliteConnecter {
         if (resultSet.next()){
             return true;
         }else return false;
+    }
+
+    public ResultSet selectAllData() throws SQLException {
+        PreparedStatement ps = conn.prepareStatement(selectAll);
+        ResultSet resultSet = ps.executeQuery();
+        return resultSet;
     }
 
     //用完关闭数据库连接

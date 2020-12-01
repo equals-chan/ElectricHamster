@@ -21,6 +21,6 @@ public class counter {
     }
 
     public void printSelf(){
-        System.out.printf("压缩了 %d 个文件夹 \n跳过了已经压缩过的 %d 个文件夹",thisTimeZippedNum,thisTimeJumppedNum);
+        System.out.println("\u001b[1;42m 压缩了 "+thisTimeZippedNum+" 个文件夹\n跳过了已经压缩过的 "+thisTimeJumppedNum +" 个文件夹\u001b[0m");
     }
 }

@@ -4,29 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.lingala.zip4j</groupId>
-    <artifactId>zip4j</artifactId>
-    <version>2.6.5-SNAPSHOT</version>
+    <groupId>moe.lacia</groupId>
+    <artifactId>ElectricHamster</artifactId>
+    <version>0.21</version>
 
-    <name>Zip4j</name>
-    <description>Zip4j - A Java library for zip files and streams</description>
-    <url>https://github.com/srikanth-lingala/zip4j</url>
-    <scm>
-        <url>git@github.com:srikanth-lingala/zip4j.git</url>
-    </scm>
-    <developers>
-        <developer>
-            <name>Srikanth Reddy Lingala</name>
-            <email>srikanth.mailbox@gmail.com</email>
-        </developer>
-    </developers>
+    <name>ElectricHamster</name>
+    <description>Electric Hamster</description>
+    <url>https://github.com/equals-chan/ElectricHamster</url>
 
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
 
 
     <properties>
@@ -54,6 +39,11 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>2.0</version>
+        </dependency>
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
