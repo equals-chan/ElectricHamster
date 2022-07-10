@@ -12,6 +12,9 @@ public class properties {
     private String zippedFilesPath;
     private String excelOpNum;
 
+    private String ifRandomPwd;
+
+    private String useThisPwd;
 
     properties(String path) throws IOException {
 
@@ -29,6 +32,12 @@ public class properties {
             this.sqlPath = (String) p.get("sqlPath");
             this.zippedFilesPath = (String) p.get("zippedFilesPath");
             this.excelOpNum = (String) p.get("excelOpNum");
+            //pwd
+            this.ifRandomPwd = (String) p.get("ifRandomPwd");
+            this.useThisPwd = (String) p.get("useThisPwd");
+            //
+
+
             while (keys.hasMoreElements()) {
                 String key = (String) keys.nextElement();
                 System.out.println(key + "：" + p.getProperty(key));
@@ -70,6 +79,12 @@ public class properties {
             bw.write("folderPath=\n");
             bw.write("#下行为压缩文件的放置路径\n");
             bw.write("zippedFilesPath=\n");
+            //pwd
+            bw.write("#下为密码部分,如果ifRandomPwd=0,则使用随机密码\n");
+            bw.write("#ifRandomPwd=1,则使用useThisPwd=  来作为密码\n");
+            bw.write("ifRandomPwd=\n");
+            bw.write("useThisPwd=123456\n");
+            //
             bw.write("\n#以下可不修改\n\n");
             bw.write("#下行为excel的放置路径,如无必要可不修改\n");
             bw.write("excelPath=./\n");
@@ -115,4 +130,15 @@ public class properties {
     public String getExcelOpNum() {
         return excelOpNum;
     }
+
+    public String getIfRandomPwd() {
+        return ifRandomPwd;
+    }
+
+    public String getUseThisPwd() {
+        return useThisPwd;
+    }
+
+
+
 }

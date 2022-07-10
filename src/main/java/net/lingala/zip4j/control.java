@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class control {
 
@@ -53,6 +54,10 @@ public class control {
         int excelOpNum = Integer.parseInt(properties.getExcelOpNum());
         //sql
         sqliteConnecter sqliter = new sqliteConnecter(properties.getSqlPath()+"db.sqlite3");
+
+        //get pwd setting
+        String ifUsingRandomPwd = properties.getIfRandomPwd();
+        String usingThisPwd = properties.getUseThisPwd();
 
 
         //计数器
@@ -97,7 +102,24 @@ public class control {
                     //取文件夹名
                     OneRow.add(s1[s1.length-1]);
 
-                    String pwd = getPwd(10); //有风险，不过自用程序，无所谓了
+
+                    //pwd
+                    String pwd = "123";
+                    if (Objects.equals(ifUsingRandomPwd, "0")) {
+                        pwd = getPwd(10); //有风险，不过自用程序，无所谓了
+                    }else if (ifUsingRandomPwd.equals("1")){
+                        pwd = usingThisPwd;
+                        if (pwd.equals("")){
+
+                            System.out.println("\u001b[1;41m 配置文件错误，密码不能为空！ \u001b[0m");
+                            System.out.println("\u001b[1;45m 程序结束 \u001b[0m");
+                            System.exit(0);
+                        }
+                    }else {
+                        System.out.println("\u001b[1;45m error 01 \u001b[0m");
+                        System.out.println("\u001b[1;45m 程序结束 \u001b[0m");
+                        System.exit(0);
+                    }
 
                     OneRow.add(pwd);
                     OneRow.add(times.getNowTimes());
@@ -144,6 +166,7 @@ public class control {
         clock.endClock();
         clock.print();
         AnsiConsole.systemUninstall();
+
     }
 
 }
