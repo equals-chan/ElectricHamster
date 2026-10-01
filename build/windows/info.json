@@ -1,0 +1,17 @@
+{
+	"fixed": {
+		"file_version": "1.0.0.0",
+		"product_version": "1.0.0.0"
+	},
+	"info": {
+		"0409": {
+			"CompanyName": "equals-chan",
+			"FileDescription": "电子仓鼠 - 自动加密归档工具",
+			"LegalCopyright": "© 2026, equals-chan",
+			"ProductName": "ElectricHamster",
+			"Comments": "ElectricHamster",
+			"FileVersion": "1.0.0",
+			"ProductVersion": "1.0.0"
+		}
+	}
+}

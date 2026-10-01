@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MsixPackagingToolTemplate
+    xmlns="http://schemas.microsoft.com/msix/packaging/msixpackagingtool/template/2022">
+    <Settings
+        AllowTelemetry="false"
+        ApplyACLsToPackageFiles="true"
+        GenerateCommandLineFile="true"
+        AllowPromptForPassword="false">
+    </Settings>
+    <Installer
+        Path="electric-hamster"
+        Arguments=""
+        InstallLocation="C:\Program Files\My Company\ElectricHamster">
+    </Installer>
+    <PackageInformation
+        PackageName="ElectricHamster"
+        PackageDisplayName="ElectricHamster"
+        PublisherName="CN=My Company"
+        PublisherDisplayName="My Company"
+        Version="0.1.0.0"
+        PackageDescription="A electric-hamster application">
+        <Capabilities>
+            <Capability Name="runFullTrust" />
+            
+        </Capabilities>
+        <Applications>
+            <Application
+                Id="com.example.electrichamster"
+                Description="A electric-hamster application"
+                DisplayName="ElectricHamster"
+                ExecutableName="electric-hamster"
+                EntryPoint="Windows.FullTrustApplication">
+                
+            </Application>
+        </Applications>
+        <Resources>
+            <Resource Language="en-us" />
+        </Resources>
+        <Dependencies>
+            <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+        </Dependencies>
+        <Properties>
+            <Framework>false</Framework>
+            <DisplayName>ElectricHamster</DisplayName>
+            <PublisherDisplayName>My Company</PublisherDisplayName>
+            <Description>A electric-hamster application</Description>
+            <Logo>Assets\AppIcon.png</Logo>
+        </Properties>
+    </PackageInformation>
+    <SaveLocation PackagePath="electric-hamster.msix" />
+    <PackageIntegrity>
+        <CertificatePath></CertificatePath>
+    </PackageIntegrity>
+</MsixPackagingToolTemplate>

@@ -1,35 +1,39 @@
 ## [ElectricHamster / 电子仓鼠](https://github.com/equals-chan/ElectricHamster)
 
-电子仓鼠症 : 指那些不断在网络上搜集自己感兴趣的数据，将其保存下来的人，尽管可能在删除前也看不了几眼，但依然乐此不疲。
+电子仓鼠症：指那些不断在网络上搜集自己感兴趣的数据、将其保存下来的人，尽管可能在删除前也看不了几眼，却依然乐此不疲。
 
-大量数据的保存与整理及其耗费时间，尽管整理数据也是仓鼠症患者的乐趣之一，但若是数据过多，恐怕也心有余而力不足，本项目正是为了自动化对数据进行加密压缩、整理而开发的。
+大量数据的保存与整理极其耗费时间。本项目用于**自动对数据加密压缩、整理**，并记录密码台账：把顶层文件夹批量打包成加密 `.7z`，随机生成密码存入加密金库，支持判重跳过、进度显示、Excel 导出与旧数据迁移。
 
-> 使用的其他项目：[zip4j](https://github.com/srikanth-lingala/zip4j)
+用 **Go + Wails v3 + Vue 3** 重写，内嵌 7-Zip ZS 引擎（zstd / LZMA2 + AES-256 + 文件名加密）。
 
+### 功能
 
+- 图形界面配置任务：源目录、输出目录、压缩算法/等级、加密、分卷、包含/排除
+- 批量加密归档，密码自动生成并写入**加密金库**（Argon2id + AES-256-GCM）
+- 判重跳过：内容签名 / 仅文件夹名 / 不判重（适合存档会变的游戏目录）
+- 任务级独立编号 + 文件名前后缀 + 起始编号
+- 运行进度（整体 + 每文件夹）、暂停 / 继续 / 取消
+- 归档记录：校验、解压、导出 Excel（含密码）
+- 导入旧版（Java）的 `config.properties` + `db.sqlite3`
 
-本人并未有过实际开发经验，项目应该有诸多问题，也欢迎大家指出（前提是有人看...）
+### 开发
 
+```
+# 后端测试（Linux/macOS，不含 GUI 根包）
+go test ./internal/... ./cmd/...
 
+# 前端
+cd frontend && npm install && npm run build
 
-##### 当前版本
+# Windows 打包：exe + 便携 zip + NSIS 安装包
+scripts/package-windows.sh            # 全部
+scripts/package-windows.sh exe        # 仅 exe + 便携 zip
+```
 
-v0.2
+详见 [DESIGN.md](DESIGN.md)。
 
-已经具有的功能
+> 使用的其他项目：[7-Zip ZS](https://github.com/mcmilk/7-Zip-zstd)（压缩引擎）、[Wails](https://wails.io/)、[zip4j](https://github.com/srikanth-lingala/zip4j)（旧版所用）。
 
-- 加密压缩，并生成对应的excel
-- 简陋的进度条，免于苦苦的等待
-- 检测已压缩过的文件夹，防止重复压缩
-- 以配置文件的方式设置路径等参数
-- 控制台的不同输出以颜色区分
+## 许可证
 
-计划添加的功能
-
-- 用户界面，快别用这个黑框框啦
-- 从数据库导出excel
-
-
-
-
-
+本项目以 [MIT License](LICENSE) 发布。第三方组件与内嵌 7-Zip ZS 引擎的许可说明见 [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)。

@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=ElectricHamster
+Comment=A electric-hamster application
+# The Exec line includes %u to pass the URL to the application
+Exec=/usr/local/bin/electric-hamster %u
+Terminal=false
+Type=Application
+Icon=electric-hamster
+Categories=Utility;
+StartupWMClass=electric-hamster
+
+ 

@@ -1,4 +1,28 @@
 .git/
 .idea/
 target/
-resources/
+
+# Go
+/dist/
+*.test
+*.out
+/eh
+/eh.exe
+/cmd/eh/eh
+/cmd/eh/eh.exe
+
+# Java build output (legacy tree is removed)
+target/
+*.class
+
+# 7-Zip runtime staged for `-tags embed_runtime` builds
+/internal/archive/runtime/
+
+# Wails / Task / frontend
+/bin/
+/.task/
+frontend/dist/
+frontend/node_modules/
+*.syso
+build/linux/appimage/build/
+build/windows/nsis/MicrosoftEdgeWebview2Setup.exe
